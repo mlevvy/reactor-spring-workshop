@@ -1,0 +1,29 @@
+# Part 05: Handling error and empty states
+doOnError
+onErrorMap
+onErrorResume
+onErrorReturn
+switchIfEmpty
+defaultIfEmpty
+
+# Part 06: Advanced operators:
+ConcatWith
+FlatMapMany
+CombineLatests
+
+
+# Part 06: Flux to Mono and Mono to Flux:
+Flux = Flux.from(Mono)
+Mono = flux.next()
+Mono = flux.reduce()
+Mono = flux.collectList()
+
+# Part 07: Cool operators:
+First
+Index
+Retry
+Compose
+Flux.as()
+
+# Part 08: Legacy blocking code: SubscribeOn and PublishOn
+
