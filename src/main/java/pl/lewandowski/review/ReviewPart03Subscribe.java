@@ -27,7 +27,7 @@ public class ReviewPart03Subscribe {
      * In order to consume items from subscriber, you can use consumer, to consume those items. Subscribe to given Subscriber with provided consumer.
      */
     public static void c01Subscribe(Mono<Product> product, Consumer<Product> consumer) {
-        product.subscribe(consumer); // return;
+		return;
     }
 
     /**
@@ -44,9 +44,7 @@ public class ReviewPart03Subscribe {
      * If Subscriber emits error, you have to return empty Optional.
      */
     public static Optional<String> c02Subscribe(Mono<Product> product) {
-        MyMonoSubscriber actual = new MyMonoSubscriber(); // return null;
-        product.subscribe(actual);  // DELETE ME
-        return actual.getProductId(); // DELETE ME
+		return null;
     }
 
     /**
@@ -58,8 +56,7 @@ public class ReviewPart03Subscribe {
      */
     public static Money c03Subscribe(Flux<Offer> offers) {
         List<Money> prices = new ArrayList<>();
-        offers.subscribe(offer -> prices.add(offer.getPrice()), throwable -> {}); // return null;
-        return prices.stream().reduce(new MoneyAverage(), MoneyAverage::accept, MoneyAverage::combine).average(); // DELETE ME
+		return null;
     }
 
     /**
@@ -70,7 +67,7 @@ public class ReviewPart03Subscribe {
      * </ul>
      */
     public static Mono<Void> c04Then(Flux<Product> result) {
-        return result.then(); // return null;
+		return null;
     }
 
     /**
@@ -81,97 +78,36 @@ public class ReviewPart03Subscribe {
      * </ul>
      */
     public static Mono<Void> c05ThenEmpty(Flux<Product> productsFromServiceA, Flux<Product> productsFromServiceB) {
-        return productsFromServiceA.thenEmpty(productsFromServiceB.then()); // return null;
+		return null;
     }
 
     /**
      * Wait for productsFromServiceA stream to be completed, and then return productsFromServiceB Publisher.
      */
     public static Mono<String> c06ThenOtherFlux(Flux<Product> productsFromServiceA, Mono<String> productsFromServiceB) {
-        return productsFromServiceA.then(productsFromServiceB); // return null;
+		return null;
     }
 
     /**
      * Wait for productsFromServiceA stream to be completed, and then return productsFromServiceB Publisher.
      */
     public static Flux<String> c07ThenNonEmptyFlux(Flux<Product> productsFromServiceA, Flux<String> productsFromServiceB) {
-        return productsFromServiceA.thenMany(productsFromServiceB); // return null;
+		return null;
     }
 
     public static Long c08BlockTail(Flux<Long> numbers) {
-        return numbers.blockLast(); // return null;
+		return null;
     }
 
     public static Long c08BlockHead(Flux<Long> numbers) {
-        return numbers.blockFirst(); // return null;
+		return null;
     }
 
     public static Long c08BlockSingle(Mono<Long> number) {
-        return number.block(); // return null;
+		return null;
     }
 
     public static Mono<Product> c09Timeout(Mono<Product> number) {
-        return number.timeout(Duration.ofHours(1)); // return null;
+		return null;
     }
 }
-// DELETE ME
-// DELETE ME
-@Value// DELETE ME
-@AllArgsConstructor// DELETE ME
-class MoneyAverage {// DELETE ME
-    private final Money total;// DELETE ME
-    private final int count;// DELETE ME
-// DELETE ME
-    MoneyAverage() {// DELETE ME
-        this.total = zero(DEFAULT_CURRENCY);// DELETE ME
-        this.count = 0;// DELETE ME
-    }// DELETE ME
-// DELETE ME
-    Money average() {// DELETE ME
-        return count > 0 ? total.divide(count): zero(DEFAULT_CURRENCY);// DELETE ME
-    }// DELETE ME
-// DELETE ME
-    MoneyAverage accept(Money that) {// DELETE ME
-        return new MoneyAverage(total.add(that), count + 1);// DELETE ME
-    }// DELETE ME
-// DELETE ME
-    MoneyAverage combine(MoneyAverage that) {// DELETE ME
-        return new MoneyAverage(total.add(that.getTotal()), count + that.count);// DELETE ME
-    }// DELETE ME
-}// DELETE ME
-// DELETE ME
-class MyMonoSubscriber implements Subscriber<Product> {  // DELETE ME
-    // DELETE ME
-    private String productId = null; // DELETE ME
-    // DELETE ME
-    // DELETE ME
-    @Override // DELETE ME
-    public void onSubscribe(Subscription s) { // DELETE ME
-        s.request(Long.MAX_VALUE); // DELETE ME
-    } // DELETE ME
-    // DELETE ME
-    // DELETE ME
-    @Override // DELETE ME
-    public void onNext(Product product) { // DELETE ME
-        productId = product.getId(); // DELETE ME
-    } // DELETE ME
-    // DELETE ME
-    // DELETE ME
-    @Override // DELETE ME
-    public void onError(Throwable t) { // DELETE ME
-    } // DELETE ME
-    // DELETE ME
-    // DELETE ME
-    @Override // DELETE ME
-    public void onComplete() { // DELETE ME
-        if (productId == null) {// DELETE ME
-            productId = "Fallback"; // DELETE ME
-        }// DELETE ME
-        // DELETE ME
-    } // DELETE ME
-    // DELETE ME
-    // DELETE ME
-    Optional<String> getProductId() { // DELETE ME
-        return Optional.ofNullable(productId); // DELETE ME
-    } // DELETE ME
-}// DELETE ME

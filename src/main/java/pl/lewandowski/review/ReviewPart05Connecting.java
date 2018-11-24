@@ -28,21 +28,21 @@ public class ReviewPart05Connecting {
      * </ul>
      */
     public Mono<Tuple2<Product, Offer>> e01_combine(Mono<Product> product, Mono<Offer> offer) {
-        return product.zipWith(offer); // return null;
+		return null;
     }
 
     /**
      * Implement @see <a href="pl.lewandowski.review.ReviewPart05Connecting#productPrice(pl.lewandowski.presto.products.Product, pl.lewandowski.presto.products.Offer)">productPrice</a> function and use it with zip function.
      */
     public Mono<OffersForProduct> e02_combine_with_function(Mono<Product> product, Mono<Offer> offer) {
-        return product.zipWith(offer, this::productPrice); // return null;
+		return null;
     }
 
     /**
      * You have two web services that receives offer. Using concat create one flux.
      */
     public Flux<Offer> e03_concat(Mono<Offer> offerOne, Mono<Offer> offerTwo) {
-        return offerOne.concatWith(offerTwo); // return null;
+		return null;
     }
 
     /**
@@ -52,7 +52,7 @@ public class ReviewPart05Connecting {
      * Find better way to two get two streams simultaneously and merge them.
      */
     public Flux<Offer> e04_merge(Mono<Offer> offerOne, Mono<Offer> offerTwo) {
-        return offerOne.mergeWith(offerTwo); // return null;
+		return null;
     }
 
     /**
@@ -61,14 +61,11 @@ public class ReviewPart05Connecting {
      * Hint: Use <a href="reactor.core.publisher.Flux#collectList()" to convert Flux to Mono>collectList()</a> to convert Flux to Mono.
      */
     public Mono<OffersForProduct> e05_zip_merge(Mono<Product> product, Mono<Offer> offerOne, Mono<Offer> offerTwo) {
-        return offerOne // return null;
-                .mergeWith(offerTwo) // DELETE ME
-                .collectList() // DELETE ME
-                .zipWith(product, (offers, product1) -> new OffersForProduct(product1,offers)); // DELETE ME
+		return null;
     }
 
     private OffersForProduct productPrice(Product product, Offer offer) {
-        return new OffersForProduct(product, singletonList(offer)); // return null;
+		return null;
     }
 }
 
