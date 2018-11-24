@@ -13,6 +13,8 @@ class ReviewSpecification extends Specification {
 
     protected final Product A_PRODUCT = new Product("A")
 
+    public static final Product B_PRODUCT = new Product("B")
+
     protected final Product ABC_PRODUCT = new Product("ABC")
 
     protected final Offer A_OFFER = new Offer(1, Money.of(1.0, "PLN"))

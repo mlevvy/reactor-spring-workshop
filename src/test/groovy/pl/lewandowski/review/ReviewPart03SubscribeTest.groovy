@@ -10,6 +10,7 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.publisher.SynchronousSink
 import reactor.test.StepVerifier
+import reactor.test.publisher.PublisherProbe
 import reactor.test.scheduler.VirtualTimeScheduler
 import spock.lang.Specification
 
@@ -24,18 +25,17 @@ class ReviewPart03SubscribeTest extends ReviewSpecification {
 
     def "01 subscribe from mono"() {
         given:
-            Product product = new Product("ABC")
-            Mono<Product> mono = Mono.just(product)
+            Mono<Product> mono = Mono.just(ABC_PRODUCT)
             VerifyingConsumer consumer = new VerifyingConsumer();
         when:
             ReviewPart03Subscribe.c01Subscribe(mono, consumer)
         then:
-            consumer.consumed() == [product]
+            consumer.consumed() == [ABC_PRODUCT]
     }
 
     def "02 custom mono subscription"() {
         expect:
-            ReviewPart03Subscribe.c02Subscribe(Mono.just(new Product("ABC"))).get() == "ABC"
+            ReviewPart03Subscribe.c02Subscribe(Mono.just(ABC_PRODUCT)).get() == "ABC"
             !ReviewPart03Subscribe.c02Subscribe(Mono.error(new IllegalAccessException())).isPresent()
             ReviewPart03Subscribe.c02Subscribe(Mono.empty()).get() == "Fallback"
     }
@@ -51,7 +51,7 @@ class ReviewPart03SubscribeTest extends ReviewSpecification {
         expect:
             ReviewPart03Subscribe.c04Then(Flux.empty()) != null
             create(ReviewPart03Subscribe.c04Then(Flux.empty())).expectComplete()
-            create(ReviewPart03Subscribe.c04Then(Flux.just(new Product("ABC")))).expectComplete()
+            create(ReviewPart03Subscribe.c04Then(Flux.just(ABC_PRODUCT))).expectComplete()
             create(ReviewPart03Subscribe.c04Then(Flux.error(new IllegalAccessException()))).expectError(IllegalAccessException)
     }
 
@@ -59,27 +59,27 @@ class ReviewPart03SubscribeTest extends ReviewSpecification {
         expect:
             ReviewPart03Subscribe.c05ThenEmpty(Flux.empty(), Flux.empty()) != null
             create(ReviewPart03Subscribe.c05ThenEmpty(Flux.empty(), Flux.empty())).expectComplete()
-            create(ReviewPart03Subscribe.c05ThenEmpty(Flux.just(new Product("ABC")), Flux.empty())).expectComplete()
+            create(ReviewPart03Subscribe.c05ThenEmpty(Flux.just(ABC_PRODUCT), Flux.empty())).expectComplete()
             create(ReviewPart03Subscribe.c05ThenEmpty(Flux.error(new IllegalAccessException()), Flux.empty())).expectComplete()
             create(ReviewPart03Subscribe.c05ThenEmpty(Flux.empty(), Flux.error(new IllegalAccessException()))).expectError(IllegalAccessException)
     }
 
     def "06 then call other mono"() {
         given:
-            VerifyingSupplier<Product> supplier = new VerifyingSupplier(new Product("ABC"))
-            Flux<Product> input = Flux.generate({ sink -> sink.next(supplier.get()); sink.complete() } as Consumer<SynchronousSink<Product>>)
+            PublisherProbe probe = PublisherProbe.of(Mono.just(ABC_PRODUCT))
+            Flux<Product> flux = probe.flux()
 
         when:
-            def create = create(ReviewPart03Subscribe.c06ThenOtherFlux(input, Mono.just("200 OK")))
+            def create = create(ReviewPart03Subscribe.c06ThenOtherFlux(flux, Mono.just("200 OK")))
 
         then:
             create.expectNext("200 OK").verifyComplete()
-            supplier.calledAtLeastOnce()
+            probe.wasSubscribed()
     }
 
     def "07 then call other flux"() {
         given:
-            VerifyingSupplier<Product> supplier = new VerifyingSupplier(new Product("ABC"))
+            VerifyingSupplier<Product> supplier = new VerifyingSupplier(ABC_PRODUCT)
             Flux<Product> input = Flux.generate({ sink -> sink.next(supplier.get()); sink.complete() } as Consumer<SynchronousSink<Product>>)
 
         when:

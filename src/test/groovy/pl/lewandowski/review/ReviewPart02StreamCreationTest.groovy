@@ -6,6 +6,7 @@ import pl.lewandowski.review.util.VerifyingSupplier
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.test.StepVerifier
+import reactor.test.publisher.PublisherProbe
 import reactor.test.scheduler.VirtualTimeScheduler
 import spock.lang.Unroll
 
@@ -21,41 +22,41 @@ class ReviewPart02StreamCreationTest extends ReviewSpecification {
     def "01 maybe null"() {
         expect:
             create(ReviewPart02StreamCreation.b01FromMaybeNull(null)).verifyComplete()
-            create(ReviewPart02StreamCreation.b01FromMaybeNull(new Product("ABC"))).expectNextMatches(ABC_PREDICATE).verifyComplete()
+            create(ReviewPart02StreamCreation.b01FromMaybeNull(ABC_PRODUCT)).expectNextMatches(ABC_PREDICATE).verifyComplete()
     }
 
     def "02 optional"() {
         expect:
             create(ReviewPart02StreamCreation.b02FromOptional(Optional.empty())).verifyComplete()
             create(ReviewPart02StreamCreation.b02FromOptional(null)).verifyComplete()
-            create(ReviewPart02StreamCreation.b02FromOptional(Optional.of(new Product("ABC")))).expectNextMatches(ABC_PREDICATE).verifyComplete()
+            create(ReviewPart02StreamCreation.b02FromOptional(Optional.of(ABC_PRODUCT))).expectNextMatches(ABC_PREDICATE).verifyComplete()
     }
 
     def "03_callable"() {
         expect:
             create(ReviewPart02StreamCreation.b03FromCallable({
-                return new Product("ABC")
+                return ABC_PRODUCT
             } as Callable<Product>)).expectNextMatches(ABC_PREDICATE).verifyComplete()
     }
 
     def "04 stream"() {
         expect:
-            create(ReviewPart02StreamCreation.b04FromStream(of((new Product("ABC"))))).expectNextMatches(ABC_PREDICATE).verifyComplete()
+            create(ReviewPart02StreamCreation.b04FromStream(of((ABC_PRODUCT)))).expectNextMatches(ABC_PREDICATE).verifyComplete()
     }
 
     def "05 array"() {
         expect:
-            create(ReviewPart02StreamCreation.b05FromArray([new Product("ABC")] as Product[])).expectNextMatches(ABC_PREDICATE).verifyComplete()
+            create(ReviewPart02StreamCreation.b05FromArray([ABC_PRODUCT] as Product[])).expectNextMatches(ABC_PREDICATE).verifyComplete()
     }
 
     def "06 list"() {
         expect:
-            create(ReviewPart02StreamCreation.b06FromList([new Product("ABC")])).expectNextMatches(ABC_PREDICATE).verifyComplete()
+            create(ReviewPart02StreamCreation.b06FromList([ABC_PRODUCT])).expectNextMatches(ABC_PREDICATE).verifyComplete()
     }
 
     def "07 from two elements"() {
         expect:
-            create(ReviewPart02StreamCreation.b07FromObjects(new Product("ABC"), new Product("ABC"))).expectNextMatches(ABC_PREDICATE).expectNextMatches(ABC_PREDICATE).verifyComplete()
+            create(ReviewPart02StreamCreation.b07FromObjects(ABC_PRODUCT, ABC_PRODUCT)).expectNextMatches(ABC_PREDICATE).expectNextMatches(ABC_PREDICATE).verifyComplete()
     }
 
     def "08 elements from 0 to 9"() {
@@ -141,7 +142,7 @@ class ReviewPart02StreamCreationTest extends ReviewSpecification {
     @Unroll
     def "13 creating flux from one mono"() {
         when:
-            Flux<Product> sut = ReviewPart02StreamCreation.b13Repeat(Mono.just(new Product("ABC"))).take(2)
+            Flux<Product> sut = ReviewPart02StreamCreation.b13Repeat(Mono.just(ABC_PRODUCT)).take(2)
 
         then:
             create(sut)
